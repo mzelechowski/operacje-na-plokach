@@ -1,6 +1,7 @@
 package pl.mzelechowski;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -47,7 +48,13 @@ public class CustomFileProvider {
         Path path = Paths.get(this.path+filename);
         try{
 /**klasa Files od Javy8 to klasa pomocnicza dla klasy File. Pomaga w operacjach na plikach*/
-            if(Files.notExists(path)) Files.createFile(path);
+            if(Files.notExists(path)){
+                Files.createFile(path);
+            }/** Metoda  statycznafile write przyjmuje  takie parametry: ścieżke do pliku typu path
+             liste danych w formie kolekcji String list<String>
+             format zapisu danych, wybralem UTF_9
+             opcjonalnie: opcje zapisu pliku: dodatnie danych do pliku istn. albo zastąpienie plku*/
+            Files.write(path, input, StandardCharsets.UTF_8, option);
         }catch(IOException e){
             e.printStackTrace();
         }
