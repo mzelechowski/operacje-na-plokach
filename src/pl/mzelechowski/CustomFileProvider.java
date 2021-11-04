@@ -1,6 +1,8 @@
 package pl.mzelechowski;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -85,5 +87,76 @@ public class CustomFileProvider {
             e.printStackTrace(); //drukuje stack błędu
         }
         return output;
+    }
+    public List<Computer> readStorage(String fileName){
+        BufferedReader bufferedReader;
+        List<Computer> output=new ArrayList<>();
+        try {
+            bufferedReader = new BufferedReader(new FileReader(path + fileName));
+            String line = bufferedReader.readLine();
+            while(line!=null){
+                String[] values =line.split(",");
+                Computer computer=new Computer();
+                computer.setMainBoard(values[0].trim());
+                computer.setCpu(values[1].trim());
+                computer.setGpu(values[2].trim());
+                computer.setHardDisk(values[3].trim());
+                computer.setCost(values[4].trim());
+                output.add(computer);
+                line=bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); //drukuje stack błędu
+        }
+        return output;
+    }
+    //metoda która, zlicza ile razy podany wyraz wystąpił w pliku tekstowym.
+    public void getWorldFromFile(String fileName, String pattern){
+        BufferedReader bufferedReader;
+        int wordCounter=0, lineCounter=0;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(path + fileName));
+            String line = bufferedReader.readLine();
+            while(line!=null){
+                lineCounter++;
+                String[] words =line.split(" ");
+                for(String w:words){
+                    if(w.contains(pattern)){
+                        wordCounter++;
+                        System.out.println("Znalazłem szukane słowo w linijece: "+lineCounter +", słowo: " + w);
+                    }
+                }
+                line=bufferedReader.readLine();
+            }
+            System.out.println("Znalazłem "+ wordCounter + " szukanych słow.");
+        } catch (IOException e) {
+            e.printStackTrace(); //drukuje stack błędu
+        }
+    }
+    ////////////////////////////////////////////
+    public void getDataFromUrl(String page, String pattern){
+        URL url= null;
+        try {
+            int wordCounter=0, lineCounter=0;
+            url = new URL(page);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            String line = reader.readLine();
+            while(line!=null){
+
+                lineCounter++;
+                String[] words =line.split(" ");
+                for(String w:words){
+                    if(w.contains(pattern)){
+                        wordCounter++;
+                        System.out.println("Znalazłem szukane słowo w linijece: "+lineCounter +", słowo: " + w);
+                       // System.out.println("Czytam linię: "+line);
+                    }
+                }
+                line = reader.readLine();
+            }
+            System.out.println("Znalazłem "+ wordCounter + " szukanych słow.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
